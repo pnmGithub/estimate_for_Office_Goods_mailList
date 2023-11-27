@@ -1,17 +1,18 @@
 ## [사무용품 견적서 메일발송]  ##
 > 견적서 발급 요청 메일의 첨부파일에 적힌 물품의 견적서를 작성하여 메일보내기   
-> REFramework로 구현 (QueueItem이 아닌 **DataTable.DataRow** 이용)   
-> 견적서 발급 요청 메일이 하나 이상임
-> **TransactionData = 메일리스트의 [mailIndex], [mailSubject], [mailAttachmentName], [mailRequestDate]**
+> REFramework로 구현 (QueueItem이 아닌 **MailMessage** 이용)
+>  - TransactionData :: 기존=DataTable, 변경=**List<MailMessage>**
+>  - TransactionItem :: 기존=QueueItem, 변경=**MailMessage**   
 
 
 #### [작업순서] ####
 > _이해를 돕기위한 작업가이드.xlsx 파일 참고
-1. 아웃룩 메일 가져오기 (TransactionData에 입력 - [mailIndex], [mailSubject], [mailAttachmentName], [mailRequestDate])
+1. 아웃룩 메일 가져오기 (TransactionData = List<MailMessage> 로 사용)
 2. 사무용품 사이트(오피스디포) 접속
-3. 작업지시서 읽어서 물품코드 검색, 물품의 수량을 작업지시서 대로 입력, 장바구니에 담기
-4. 장바구니 페이지에서 견적서 PDF로 저장
-5. 견적서 첨부하여 메일 발송. 원본 메일 폴더 이동
+3. 메일 첨부파일(작업지시서) 엑셀파일 저장하기
+4. 작업지시서 읽어서 물품코드 검색, 물품의 수량을 작업지시서 대로 입력, 장바구니에 담기
+5. 장바구니 페이지에서 견적서 PDF로 저장
+6. 견적서 첨부하여 메일 발송. 원본 메일 폴더 이동
 
 
 #### [Config.xlsx 참고] ####
@@ -37,16 +38,17 @@
 1. **INITIALIZE PROCESS**
    + Config.xlsx 세팅
    + 브라우저 강제 종료
+   + 폴더 처리(폴더 있으면 삭제 후 생성, 없으면 생성)
    + 아웃룩 메일 읽기 (제목 "견적서", 첨부파일 있음 으로 필터)
-      1. 견적서요청 메일 정보 TransactionData에 저장
-      2. 견적서 요청(작업지시서) 엑셀파일 저장
+      1. 견적서요청 메일 리스트 TransactionData에 저장
    + 오피스디포 브라우저 오픈
 
 2. **GET TRANSACTION DATA**
    + Get transaction item 비활성
-   + TransactionNumber가 DataTable Row 수만큼 반복을 위한 처리 -  TransactionData의 Row 갯수 체크해서 TransactionItem에 현재 Row 정보 할당
+   + TransactionNumber가 TransactionData.Count 수만큼 반복을 위한 처리 - TransactionData의 리스트 갯수 체크해서 TransactionItem에 현재 리스트 정보 할당
 
 4. **PROCESS TRANSACTION**
+   + 메일 첨부파일 중 .xlsx 파일 저장
    + 저장된 작업지시서.xlsx 파일 읽기. DataTable에 저장
    + DataTable 반복하면서
      1. 오피스디포 사이트에서 물품코드 검색
@@ -59,7 +61,7 @@
    + 브라우저 강제 종료
 
 * * *
-![estimate_for_Office_Goods_guide](https://github.com/pnmGithub/estimate_for_Office_Goods.RPA-uipath/assets/149296871/f0721054-4ca0-4ca0-a80e-39d6174e0e50)
+![estimate_for_Office_Goods_mailList_guide](https://github.com/pnmGithub/estimate_for_Office_Goods_mailList.RPA-uipath/assets/149296871/314fac58-96bc-40ff-848e-70696d1d508b)
 * * *
 
 ### REFrameWork Template ###
