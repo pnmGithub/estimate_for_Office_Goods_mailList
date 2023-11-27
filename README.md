@@ -1,7 +1,7 @@
 ## [사무용품 견적서 메일발송]  ##
 > 견적서 발급 요청 메일의 첨부파일에 적힌 물품의 견적서를 작성하여 메일보내기   
 > REFramework로 구현 (QueueItem이 아닌 **MailMessage** 이용)
->  - TransactionData :: 기존=DataTable, 변경=**List<MailMessage>**
+>  - TransactionData :: 기존=DataTable, 변경=**List-MailMessage**
 >  - TransactionItem :: 기존=QueueItem, 변경=**MailMessage**   
 
 
